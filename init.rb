@@ -4,7 +4,7 @@ Redmine::Plugin.register :redmine_qbo_labels do
   name 'Redmine QBO Labels plugin'
   author 'Rick Barrette'
   description 'Prints part labels (customer last name and document number) for issues, estimates and invoices on a Brother QL label printer, through a small print agent on the printer\'s network'
-  version '2026.11.0'
+  version '2026.11.1'
   url 'https://github.com/rickbarrette/redmine_qbo_labels'
   author_url 'https://barrettefabrication.com'
   requires_redmine version_or_higher: '7.0.0'
