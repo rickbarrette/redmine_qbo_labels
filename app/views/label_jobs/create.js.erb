@@ -1,0 +1,7 @@
+<% if @job.persisted? %>
+  QboLabels.follow(<%= raw({ url: label_job_path(@job), printer: @job.label_printer.name,
+                             printer_online: @job.label_printer.online? }.to_json) %>);
+<% else %>
+  $('#ajax-modal').html('<%= escape_javascript(render partial: 'label_jobs/dialog') %>');
+  QboLabels.initDialog();
+<% end %>

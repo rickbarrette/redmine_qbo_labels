@@ -1,0 +1,81 @@
+#The MIT License (MIT)
+#
+#Copyright (c) 2026 rick barrette
+#
+#Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+#
+#The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+#
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+# English strings go here for Rails i18n
+en:
+  # Permission (Roles and permissions)
+  permission_print_labels: "Print labels"
+
+  label_label_printer_plural: "Label printers"
+  label_qbo_labels_new_printer: "New label printer"
+  label_qbo_labels_print_title: "Print label"
+  label_qbo_labels_preview: "Label preview"
+  label_qbo_labels_online: "Online"
+  label_qbo_labels_offline: "offline"
+  label_qbo_labels_agent_version: "Agent %{version}"
+  label_qbo_labels_printer_not_found: "No printer found yet"
+  label_qbo_labels_recent_jobs: "Recent labels"
+  label_qbo_labels_label_settings: "Labels"
+  label_qbo_labels_agent_settings: "Print agents"
+  label_qbo_labels_inches: "inches"
+  label_qbo_labels_source_issue: "Work order"
+  label_qbo_labels_source_estimate: "Estimate"
+  label_qbo_labels_source_invoice: "Invoice"
+  label_qbo_labels_status_queued: "Waiting for the printer"
+  label_qbo_labels_status_printing: "Printing"
+  label_qbo_labels_status_printed: "Printed"
+  label_qbo_labels_status_failed: "Failed"
+  label_qbo_labels_status_expired: "Not printed"
+
+  field_qbo_labels_name: "Name"
+  field_qbo_labels_po_number: "PO number"
+  field_qbo_labels_copies: "Copies"
+  field_qbo_labels_printer: "Printer"
+  field_qbo_labels_agent: "Print agent"
+  field_qbo_labels_last_seen: "Last seen"
+  field_qbo_labels_label: "Label"
+  field_qbo_labels_for: "For"
+  field_qbo_labels_token: "Agent token"
+  field_qbo_labels_length: "Label length"
+  field_qbo_labels_uppercase: "Capital letters"
+  field_qbo_labels_poll_seconds: "Check for labels every"
+  field_qbo_labels_job_expiry: "Give up on a label after"
+  field_qbo_labels_log_requests: "Log label printer requests"
+
+  button_qbo_labels_print: "Print label"
+  button_qbo_labels_print_another: "Print again"
+  button_qbo_labels_new_token: "New token"
+
+  text_qbo_labels_printing: "Printing…"
+  text_qbo_labels_waiting: "Sent, waiting for the printer…"
+  text_qbo_labels_offline: "The printer's agent is offline. The label will print if it comes back within a few minutes…"
+  text_qbo_labels_lost_contact: "Lost contact with Redmine. Check the printer before printing again."
+  text_qbo_labels_no_printers: "There's no label printer set up yet (Administration » Label printers)."
+  text_qbo_labels_no_printers_admin: "No label printers yet. Add one, then run the print agent on the printer's network with its token."
+  text_qbo_labels_printer_offline: "%{name}'s print agent is offline: the label will wait a few minutes for it."
+  text_qbo_labels_printer_name: "Shown in the print dialog when there's more than one printer, e.g. Parts room"
+  text_qbo_labels_printer_active: "Inactive printers aren't offered for printing, and their agent can't sign in"
+  text_qbo_labels_new_token_confirm: "The print agent stops working until it's given the new token. Continue?"
+  text_qbo_labels_token_once: "Copy the token now: it isn't shown again. If it's lost, make a new one."
+  text_qbo_labels_compose_intro: "Run the print agent on a computer on the printer's network, for example with Docker Compose:"
+  text_qbo_labels_compose_after: "Once it's running, the printer shows as Online on the Label printers page, with the printer the agent found."
+  text_qbo_labels_length: "Labels are as long as their text needs, from the shorter length up to the longer; long names get smaller letters to fit"
+  text_qbo_labels_poll_seconds: "seconds (the agent picks this up within a poll)"
+  text_qbo_labels_job_expiry: "minutes, when the printer's agent is offline, so labels don't print long after they were asked for"
+  text_qbo_labels_log_requests: "Writes the print agents' polls and the print dialog's status checks to the Redmine log. Turn on to debug, off when done (they come every couple of seconds)."
+  text_qbo_labels_job_expired: "The printer's agent didn't pick it up in time"
+  text_qbo_labels_job_unconfirmed: "The printer's agent didn't say whether it printed"
+  text_qbo_labels_job_failed: "The printer reported an error"
+
+  activerecord:
+    errors:
+      messages:
+        qbo_labels_no_text: "The label has no text"
+        qbo_labels_text_too_long: "The label can have up to 4 lines of %{count} characters"

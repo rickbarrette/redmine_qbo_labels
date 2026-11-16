@@ -1,0 +1,69 @@
+<%# The Print label dialog: the label's lines (filled from the issue, estimate or invoice), a preview drawn
+    the way the print agent draws it (assets/javascripts/qbo_labels.js), copies and printer %>
+<div id="qbo-label-dialog"
+     data-max-length-mm="<%= RedmineQboLabels::Settings.max_length_mm %>"
+     data-min-length-mm="<%= RedmineQboLabels::Settings.min_length_mm %>"
+     data-uppercase="<%= RedmineQboLabels::Settings.uppercase? %>"
+     data-text-printing="<%= l(:text_qbo_labels_printing) %>"
+     data-text-waiting="<%= l(:text_qbo_labels_waiting) %>"
+     data-text-offline="<%= l(:text_qbo_labels_offline) %>"
+     data-text-lost="<%= l(:text_qbo_labels_lost_contact) %>">
+  <% if @printers.empty? %>
+    <p class="nodata"><%= l(:text_qbo_labels_no_printers) %></p>
+  <% else %>
+    <%= form_tag label_jobs_path, remote: true, id: 'qbo-label-form' do %>
+      <%= hidden_field_tag :source_type, @source.type %>
+      <%= hidden_field_tag :source_id, @source.id %>
+      <% if @job&.errors&.any? %>
+        <div id="errorExplanation"><ul><% @job.errors.full_messages.each do |message| %><li><%= message %></li><% end %></ul></div>
+      <% end %>
+
+      <div class="qbo-label-preview-wrap">
+        <canvas class="qbo-label-preview" width="1" height="1" aria-label="<%= l(:label_qbo_labels_preview) %>"></canvas>
+        <div class="qbo-label-size"></div>
+      </div>
+
+      <div class="tabular">
+        <p>
+          <label for="qbo_label_line_0"><%= l(:field_qbo_labels_name) %></label>
+          <%= text_field_tag 'lines[]', @lines[0], id: 'qbo_label_line_0', class: 'qbo-label-line',
+                             maxlength: LabelJob::MAX_LINE_LENGTH, autocomplete: 'off' %>
+        </p>
+        <p>
+          <label for="qbo_label_line_1"><%= l(:field_qbo_labels_po_number) %></label>
+          <%= text_field_tag 'lines[]', @lines[1], id: 'qbo_label_line_1', class: 'qbo-label-line',
+                             maxlength: LabelJob::MAX_LINE_LENGTH, autocomplete: 'off' %>
+        </p>
+        <p>
+          <label for="qbo_label_copies"><%= l(:field_qbo_labels_copies) %></label>
+          <%= number_field_tag :copies, @copies, id: 'qbo_label_copies', min: 1, max: LabelJob::MAX_COPIES,
+                               class: 'qbo-label-copies' %>
+        </p>
+        <% if @printers.size > 1 %>
+          <p>
+            <label for="qbo_label_printer"><%= l(:field_qbo_labels_printer) %></label>
+            <%= select_tag :printer_id,
+                           options_for_select(@printers.map { |p| ["#{p.name}#{" (#{l(:label_qbo_labels_offline)})" unless p.online?}", p.id] },
+                                              params[:printer_id] || @printers.find(&:online?)&.id),
+                           id: 'qbo_label_printer' %>
+          </p>
+        <% elsif !@printers.first.online? %>
+          <p class="qbo-label-warning"><%= l(:text_qbo_labels_printer_offline, name: @printers.first.name) %></p>
+        <% end %>
+      </div>
+
+      <p class="buttons">
+        <%= submit_tag l(:button_qbo_labels_print), class: 'qbo-label-submit', data: { disable_with: l(:button_qbo_labels_print) } %>
+        <%= link_to_function l(:button_cancel), 'hideModal(this);' %>
+      </p>
+    <% end %>
+
+    <div class="qbo-label-status" hidden>
+      <p class="qbo-label-status-text"></p>
+      <p class="buttons">
+        <%= button_tag l(:button_qbo_labels_print_another), type: 'button', onclick: 'QboLabels.again();', class: 'qbo-label-again' %>
+        <%= button_tag l(:button_close), type: 'button', onclick: 'hideModal(this);' %>
+      </p>
+    </div>
+  <% end %>
+</div>

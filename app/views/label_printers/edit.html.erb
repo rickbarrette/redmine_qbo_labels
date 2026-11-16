@@ -1,0 +1,6 @@
+<h2><%= link_to l(:label_label_printer_plural), label_printers_path %> &#187; <%= @printer.name %></h2>
+
+<%= labelled_form_for :label_printer, @printer, url: label_printer_path(@printer), html: { method: :patch } do |f| %>
+  <%= render partial: 'label_printers/form', locals: { f: f } %>
+  <%= submit_tag l(:button_save) %>
+<% end %>

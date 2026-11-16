@@ -1,0 +1,4 @@
+<%# Print label, in the top-right actions of an issue, estimate or invoice; opens the print dialog %>
+<%= link_to sprite_icon('qbo-label-print', l(:button_qbo_labels_print), plugin: 'redmine_qbo_labels'),
+            new_label_job_path(source_type: source_type, source_id: source_id),
+            remote: true, class: 'icon icon-qbo-label-print', title: l(:button_qbo_labels_print) %>

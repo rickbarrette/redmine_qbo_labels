@@ -1,0 +1,42 @@
+<%# Settings for redmine_qbo_labels (Administration » Plugins » Configure) %>
+<% s = RedmineQboLabels::Settings %>
+<% field = ->(key) { "settings[#{key}]" } %>
+
+<p><%= link_to sprite_icon('document', l(:label_label_printer_plural)), label_printers_path, class: 'icon icon-document' %></p>
+
+<fieldset class="box tabular">
+  <legend><%= l(:label_qbo_labels_label_settings) %></legend>
+  <p>
+    <label for="qbo_labels_min_length"><%= l(:field_qbo_labels_length) %></label>
+    <%= number_field_tag field.call('min_length_in'), s.min_length_in, id: 'qbo_labels_min_length', min: 0.5, max: 12, step: 0.1, style: 'width: 5em' %>
+    &ndash;
+    <%= number_field_tag field.call('max_length_in'), s.max_length_in, id: 'qbo_labels_max_length', min: 1, max: 12, step: 0.1, style: 'width: 5em' %>
+    <%= l(:label_qbo_labels_inches) %>
+    <em class="info"><%= l(:text_qbo_labels_length) %></em>
+  </p>
+  <p>
+    <label for="qbo_labels_uppercase"><%= l(:field_qbo_labels_uppercase) %></label>
+    <%= hidden_field_tag field.call('uppercase'), '0', id: nil %>
+    <%= check_box_tag field.call('uppercase'), '1', s.uppercase?, id: 'qbo_labels_uppercase' %>
+  </p>
+</fieldset>
+
+<fieldset class="box tabular">
+  <legend><%= l(:label_qbo_labels_agent_settings) %></legend>
+  <p>
+    <label for="qbo_labels_poll"><%= l(:field_qbo_labels_poll_seconds) %></label>
+    <%= number_field_tag field.call('poll_seconds'), s.poll_seconds, id: 'qbo_labels_poll', min: 1, max: 60, style: 'width: 5em' %>
+    <em class="info"><%= l(:text_qbo_labels_poll_seconds) %></em>
+  </p>
+  <p>
+    <label for="qbo_labels_expiry"><%= l(:field_qbo_labels_job_expiry) %></label>
+    <%= number_field_tag field.call('job_expiry_minutes'), s.job_expiry.in_minutes.round, id: 'qbo_labels_expiry', min: 1, max: 1440, style: 'width: 5em' %>
+    <em class="info"><%= l(:text_qbo_labels_job_expiry) %></em>
+  </p>
+  <p>
+    <label for="qbo_labels_log"><%= l(:field_qbo_labels_log_requests) %></label>
+    <%= hidden_field_tag field.call('log_requests'), '0', id: nil %>
+    <%= check_box_tag field.call('log_requests'), '1', s.log_requests?, id: 'qbo_labels_log' %>
+    <em class="info"><%= l(:text_qbo_labels_log_requests) %></em>
+  </p>
+</fieldset>

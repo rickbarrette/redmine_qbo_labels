@@ -1,0 +1,6 @@
+<h2><%= link_to l(:label_label_printer_plural), label_printers_path %> &#187; <%= l(:label_qbo_labels_new_printer) %></h2>
+
+<%= labelled_form_for :label_printer, @printer, url: label_printers_path, html: { method: :post } do |f| %>
+  <%= render partial: 'label_printers/form', locals: { f: f } %>
+  <%= submit_tag l(:button_create) %>
+<% end %>

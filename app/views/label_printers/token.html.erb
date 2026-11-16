@@ -1,0 +1,30 @@
+<%# Shown once, right after a printer is added or gets a new token: the agent's token and how to run the agent %>
+<% redmine_url = "#{Setting.protocol}://#{Setting.host_name}".chomp('/') %>
+<h2><%= link_to l(:label_label_printer_plural), label_printers_path %> &#187; <%= @printer.name %></h2>
+
+<div class="flash warning"><%= l(:text_qbo_labels_token_once) %></div>
+
+<div class="box">
+  <p><strong><%= l(:field_qbo_labels_token) %></strong></p>
+  <pre class="qbo-label-token"><%= @printer.token %></pre>
+
+  <p><%= l(:text_qbo_labels_compose_intro) %></p>
+<pre class="qbo-label-token">services:
+  label-agent:
+    build: https://github.com/rickbarrette/redmine_qbo_label_agent.git
+    restart: always
+    # Host networking lets the agent find the printer on the local network (Bonjour/mDNS)
+    network_mode: host
+    environment:
+      REDMINE_URL: <%= redmine_url %>
+      AGENT_TOKEN: <%= @printer.token %>
+      PRINTER_MODEL: QL-820NWB
+      # Optional: skip the network search and use this printer
+      # PRINTER: tcp://192.168.0.100
+      # DEBUG, INFO or WARNING
+      LOG_LEVEL: INFO
+</pre>
+  <p><em class="info"><%= l(:text_qbo_labels_compose_after) %></em></p>
+</div>
+
+<p><%= link_to l(:button_back), label_printers_path %></p>

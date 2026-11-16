@@ -1,0 +1,5 @@
+<%# Print label on an issue's page: Redmine's issue actions have no hook, so the link goes there from here %>
+<template id="qbo-label-issue-link"><%= render partial: 'label_hooks/print_link', locals: { source_type: 'issue', source_id: issue.id } %></template>
+<%= javascript_tag do %>
+  $(function() { QboLabels.placeIssueLink('#qbo-label-issue-link'); });
+<% end %>

@@ -1,0 +1,98 @@
+<%# Administration » Label printers %>
+<div class="contextual">
+  <%= link_to sprite_icon('add', l(:label_qbo_labels_new_printer)), new_label_printer_path, class: 'icon icon-add' %>
+  <%= link_to sprite_icon('settings', l(:label_settings)), plugin_settings_path('redmine_qbo_labels'), class: 'icon icon-settings' %>
+</div>
+
+<h2><%= l(:label_label_printer_plural) %></h2>
+
+<% if @printers.empty? %>
+  <p class="nodata"><%= l(:text_qbo_labels_no_printers_admin) %></p>
+<% else %>
+  <div class="autoscroll">
+    <table class="list label-printers">
+      <thead>
+        <tr>
+          <th><%= l(:field_name) %></th>
+          <th><%= l(:field_qbo_labels_agent) %></th>
+          <th><%= l(:field_qbo_labels_printer) %></th>
+          <th><%= l(:field_qbo_labels_last_seen) %></th>
+          <th><%= l(:field_active) %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @printers.each do |printer| %>
+          <tr>
+            <td class="name"><%= printer.name %></td>
+            <td>
+              <% if printer.online? %>
+                <span class="status-online"><%= l(:label_qbo_labels_online) %></span>
+              <% else %>
+                <span class="status-offline"><%= l(:label_qbo_labels_offline) %></span>
+              <% end %>
+              <% if printer.agent_version.present? %><br><small><%= l(:label_qbo_labels_agent_version, version: printer.agent_version) %></small><% end %>
+            </td>
+            <td>
+              <% if printer.printer_model.present? || printer.printer_address.present? %>
+                <%= [printer.printer_model, printer.printer_address].compact_blank.join(' @ ') %>
+              <% else %>
+                <span class="qbo-label-muted"><%= l(:label_qbo_labels_printer_not_found) %></span>
+              <% end %>
+              <% if printer.printer_status.present? %><br><small><%= printer.printer_status %></small><% end %>
+            </td>
+            <td>
+              <%= printer.last_seen_at ? format_time(printer.last_seen_at) : '-' %>
+              <% if printer.last_ip.present? %><br><small><%= printer.last_ip %></small><% end %>
+            </td>
+            <td><%= checked_image printer.active? %></td>
+            <td class="buttons">
+              <%= link_to sprite_icon('edit', l(:button_edit)), edit_label_printer_path(printer), class: 'icon icon-edit' %>
+              <%= link_to sprite_icon('key', l(:button_qbo_labels_new_token)), regenerate_token_label_printer_path(printer),
+                          method: :post, class: 'icon icon-key', data: { confirm: l(:text_qbo_labels_new_token_confirm) } %>
+              <%= link_to sprite_icon('del', l(:button_delete)), label_printer_path(printer), method: :delete,
+                          class: 'icon icon-del', data: { confirm: l(:text_are_you_sure) } %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>
+
+<h3><%= l(:label_qbo_labels_recent_jobs) %></h3>
+<% if @jobs.empty? %>
+  <p class="nodata"><%= l(:label_no_data) %></p>
+<% else %>
+  <div class="autoscroll">
+    <table class="list label-jobs">
+      <thead>
+        <tr>
+          <th><%= l(:field_created_on) %></th>
+          <th><%= l(:field_qbo_labels_label) %></th>
+          <th><%= l(:field_qbo_labels_copies) %></th>
+          <th><%= l(:field_qbo_labels_for) %></th>
+          <th><%= l(:field_user) %></th>
+          <th><%= l(:field_qbo_labels_printer) %></th>
+          <th><%= l(:field_status) %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @jobs.each do |job| %>
+          <tr>
+            <td><%= format_time(job.created_at) %></td>
+            <td class="lines"><%= safe_join(job.lines.map { |line| h(line) }, tag.br) %></td>
+            <td><%= job.copies %></td>
+            <td><%= job.source_type.present? ? l("label_qbo_labels_source_#{job.source_type}") + " #{job.source_id}" : '-' %></td>
+            <td><%= job.user ? link_to_user(job.user) : '-' %></td>
+            <td><%= job.label_printer&.name %></td>
+            <td class="status-<%= job.status %>">
+              <%= job.status_label %>
+              <% if job.error.present? %><br><small><%= job.error %></small><% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>

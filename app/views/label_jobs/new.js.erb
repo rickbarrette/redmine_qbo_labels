@@ -1,0 +1,3 @@
+$('#ajax-modal').html('<%= escape_javascript(render partial: 'label_jobs/dialog') %>');
+showModal('ajax-modal', '480px', '<%= escape_javascript(l(:label_qbo_labels_print_title)) %>');
+QboLabels.initDialog();

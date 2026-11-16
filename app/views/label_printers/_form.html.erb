@@ -1,0 +1,11 @@
+<%= error_messages_for 'printer' %>
+<div class="box tabular">
+  <p>
+    <%= f.text_field :name, size: 30, maxlength: 60, required: true %>
+    <em class="info"><%= l(:text_qbo_labels_printer_name) %></em>
+  </p>
+  <p>
+    <%= f.check_box :active %>
+    <em class="info"><%= l(:text_qbo_labels_printer_active) %></em>
+  </p>
+</div>
