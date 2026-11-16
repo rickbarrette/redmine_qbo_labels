@@ -62,6 +62,49 @@ class LabelSourceTest < ActiveSupport::TestCase
     User.current = nil
   end
 
+  def test_a_blank_label
+    source = RedmineQboLabels::LabelSource.find('', nil)
+    assert source.blank?
+    assert_equal ['', ''], source.lines
+    assert_nil source.title
+    assert_empty source.po_suggestions
+  end
+
+  def test_a_customer_fills_in_the_name_and_suggests_po_numbers
+    customer = create_customer
+    create_estimate(customer, id: '8001', doc_number: '1234', txn_date: Date.new(2026, 11, 2))
+    create_estimate(customer, id: '8002', doc_number: '1240', txn_date: Date.new(2026, 11, 9))
+    Issue.find(1).update_column(:customer_id, customer.id)
+    User.current = User.find(1) # admin
+
+    source = RedmineQboLabels::LabelSource.find('customer', customer.id)
+    assert_equal ['Smith', ''], source.lines
+    numbers = source.po_suggestions.map(&:first)
+    assert_equal %w[E1240 E1234 W1], numbers
+  ensure
+    User.current = nil
+  end
+
+  def test_estimates_from_the_record
+    customer = create_customer
+    estimate = create_estimate(customer)
+    User.current = User.find(1)
+    source = RedmineQboLabels::LabelSource.find('estimate', estimate.id)
+    assert_equal %w[Smith E1234], source.lines
+    assert_equal 'Estimate #1234', source.title
+    assert_includes source.po_suggestions.map(&:first), 'E1234'
+  ensure
+    User.current = nil
+  end
+
+  def test_customers_need_view_customers
+    customer = create_customer
+    User.current = User.find(7)
+    assert_nil RedmineQboLabels::LabelSource.find('customer', customer.id)
+  ensure
+    User.current = nil
+  end
+
   def test_estimates_and_invoices_need_redmine_qbos_permissions
     User.current = User.find(7) # no global permissions
     assert_nil RedmineQboLabels::LabelSource.find('estimate', 1)

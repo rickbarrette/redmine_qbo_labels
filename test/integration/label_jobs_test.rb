@@ -83,10 +83,36 @@ class LabelJobsTest < Redmine::IntegrationTest
     assert_select 'template#qbo-label-issue-link a.icon-qbo-label-print[data-remote=true]'
   end
 
+  def test_sidebar_prints_for_the_work_order_on_its_page
+    log_user('jsmith', 'jsmith')
+    get '/issues/1'
+    assert_select '#sidebar .qbo-label-sidebar a.icon-qbo-label-print[href=?]', '/label_jobs/new?source_id=1&source_type=issue'
+    assert_select '#sidebar .qbo-label-sidebar', text: /Work order #1/
+  end
+
+  def test_sidebar_prints_a_blank_label_elsewhere
+    log_user('jsmith', 'jsmith')
+    get '/projects'
+    assert_select '#sidebar .qbo-label-sidebar a.icon-qbo-label-print[href=?]', '/label_jobs/new'
+  end
+
+  def test_blank_label_dialog_and_print
+    log_user('jsmith', 'jsmith')
+    get '/label_jobs/new', xhr: true
+    assert_response :success
+    assert_no_match(/qbo_label_po_numbers/, response.body)
+
+    post '/label_jobs', params: { source_type: '', source_id: '', lines: ['Parts', 'Bin 4'] }, xhr: true
+    job = LabelJob.last
+    assert_equal ['PARTS', 'BIN 4'], job.lines
+    assert_nil job.source_type
+  end
+
   def test_no_link_without_an_active_printer
     @printer.update!(active: false)
     log_user('jsmith', 'jsmith')
     get '/issues/1'
     assert_select 'template#qbo-label-issue-link', 0
+    assert_select '.qbo-label-sidebar', 0
   end
 end

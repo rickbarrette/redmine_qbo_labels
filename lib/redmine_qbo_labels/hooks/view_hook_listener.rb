@@ -10,8 +10,16 @@
 
 module RedmineQboLabels
   module Hooks
-    # "Print label" in the top-right actions of issues, estimates and invoices
+    # "Print label" in the top-right actions of issues, estimates and invoices, and in the sidebar of every page
     class ViewHookListener < Redmine::Hook::ViewListener
+      # Pages the sidebar's Print label fills the label from: [controller, action] => how to find the record
+      SIDEBAR_SOURCES = {
+        %w[issues show] => ['issue', ->(c) { c.instance_variable_get(:@issue) }],
+        %w[qbo_estimates edit] => ['estimate', ->(c) { c.instance_variable_get(:@form) }],
+        %w[qbo_invoices edit] => ['invoice', ->(c) { c.instance_variable_get(:@form) }],
+        %w[customers show] => ['customer', ->(c) { c.instance_variable_get(:@customer) }],
+        %w[customer_appointments show] => ['appointment', ->(c) { c.instance_variable_get(:@appointment) }]
+      }.freeze
 
       # The print dialog's script and styles
       def view_layouts_base_html_head(context = {})
@@ -39,7 +47,36 @@ module RedmineQboLabels
         context[:hook_caller].render(partial: 'label_hooks/issue_print_link', locals: { issue: issue })
       end
 
+      # The sidebar's Labels section: Print label for what the page shows (a customer, estimate, invoice,
+      # appointment or work order), or a blank label anywhere else
+      def view_layouts_base_sidebar(context = {})
+        return '' unless RedmineQboLabels.printing_available?
+
+        source_type, record = sidebar_source(context[:controller])
+        context[:hook_caller].render(partial: 'label_hooks/sidebar',
+                                     locals: { source_type: source_type, source_id: record&.id,
+                                               title: sidebar_title(source_type, record) })
+      end
+
       private
+
+      def sidebar_source(controller)
+        return [nil, nil] unless controller
+
+        type, finder = SIDEBAR_SOURCES[[controller.controller_name, controller.action_name]]
+        record = finder&.call(controller)
+        record&.id.present? ? [type, record] : [nil, nil]
+      end
+
+      # What the page shows, from what the page already loaded (no QuickBooks lookups on every page)
+      def sidebar_title(source_type, record)
+        case source_type
+        when 'issue' then "#{l(:label_qbo_labels_source_issue)} ##{record.id}"
+        when 'estimate', 'invoice' then "#{l("label_qbo_labels_source_#{source_type}")} ##{record.doc_number}"
+        when 'customer' then record.name
+        when 'appointment' then record.try(:subject).presence || "#{l(:label_qbo_labels_source_appointment)} ##{record.id}"
+        end
+      end
 
       def print_link(context, source_type, source_id)
         return '' if source_id.blank? || !RedmineQboLabels.printing_available?

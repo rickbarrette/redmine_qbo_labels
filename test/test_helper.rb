@@ -31,6 +31,18 @@ module QboLabelsTestHelper
     LabelJob.create!({ label_printer: printer, user: user, lines: lines, status: status }.merge(attributes))
   end
 
+  # A customer, without sending it to QuickBooks
+  def create_customer(id: 9001, name: 'Jane Smith')
+    customer = Customer.new(id: id, name: name)
+    customer.skip_qbo_push = true
+    customer.save!
+    customer
+  end
+
+  def create_estimate(customer, id: '8001', doc_number: '1234', txn_date: Date.new(2026, 11, 2))
+    Estimate.create!(id: id, doc_number: doc_number, txn_date: txn_date, customer: customer)
+  end
+
   def with_label_settings(values)
     saved = Setting.plugin_redmine_qbo_labels
     Setting.plugin_redmine_qbo_labels = RedmineQboLabels::Settings::DEFAULTS.merge(values)

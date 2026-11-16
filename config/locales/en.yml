@@ -28,6 +28,9 @@ en:
   label_qbo_labels_source_issue: "Work order"
   label_qbo_labels_source_estimate: "Estimate"
   label_qbo_labels_source_invoice: "Invoice"
+  label_qbo_labels_source_customer: "Customer"
+  label_qbo_labels_source_appointment: "Appointment"
+  label_qbo_labels_sidebar: "Labels"
   label_qbo_labels_status_queued: "Waiting for the printer"
   label_qbo_labels_status_printing: "Printing"
   label_qbo_labels_status_printed: "Printed"
@@ -54,6 +57,8 @@ en:
   button_qbo_labels_new_token: "New token"
 
   text_qbo_labels_printing: "Printing…"
+  text_qbo_labels_sidebar_for: "for %{title}"
+  text_qbo_labels_po_suggestions: "Pick from the customer's estimates, invoices and open work orders, or type one"
   text_qbo_labels_waiting: "Sent, waiting for the printer…"
   text_qbo_labels_offline: "The printer's agent is offline. The label will print if it comes back within a few minutes…"
   text_qbo_labels_lost_contact: "Lost contact with Redmine. Check the printer before printing again."

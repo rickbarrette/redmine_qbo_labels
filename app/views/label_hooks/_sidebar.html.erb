@@ -1,0 +1,8 @@
+<%# The sidebar's Labels section (every page): Print label for what the page shows, or a blank label %>
+<h3><%= l(:label_qbo_labels_sidebar) %></h3>
+<p class="qbo-label-sidebar">
+  <%= link_to sprite_icon('qbo-label-print', l(:button_qbo_labels_print), plugin: 'redmine_qbo_labels'),
+              new_label_job_path({ source_type: source_type, source_id: source_id }.compact),
+              remote: true, class: 'icon icon-qbo-label-print' %>
+  <% if title %><br><span class="qbo-label-muted"><%= l(:text_qbo_labels_sidebar_for, title: title) %></span><% end %>
+</p>

@@ -21,6 +21,7 @@
       <div class="qbo-label-preview-wrap">
         <canvas class="qbo-label-preview" width="1" height="1" aria-label="<%= l(:label_qbo_labels_preview) %>"></canvas>
         <div class="qbo-label-size"></div>
+        <% if @source.title %><div class="qbo-label-for"><%= @source.title %></div><% end %>
       </div>
 
       <div class="tabular">
@@ -31,8 +32,17 @@
         </p>
         <p>
           <label for="qbo_label_line_1"><%= l(:field_qbo_labels_po_number) %></label>
+          <% suggestions = @source.po_suggestions %>
           <%= text_field_tag 'lines[]', @lines[1], id: 'qbo_label_line_1', class: 'qbo-label-line',
-                             maxlength: LabelJob::MAX_LINE_LENGTH, autocomplete: 'off' %>
+                             maxlength: LabelJob::MAX_LINE_LENGTH, autocomplete: 'off',
+                             list: ('qbo_label_po_numbers' if suggestions.any?),
+                             placeholder: ('E1234, I1234, W1234' if @lines[1].blank?) %>
+          <% if suggestions.any? %>
+            <datalist id="qbo_label_po_numbers">
+              <% suggestions.each do |number, description| %><option value="<%= number %>"><%= description %></option><% end %>
+            </datalist>
+            <em class="info"><%= l(:text_qbo_labels_po_suggestions) %></em>
+          <% end %>
         </p>
         <p>
           <label for="qbo_label_copies"><%= l(:field_qbo_labels_copies) %></label>

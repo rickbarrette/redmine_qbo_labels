@@ -8,7 +8,8 @@
 #
 #THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# The Print label dialog: opened from an issue, estimate or invoice (new), sends the label to a printer's
+# The Print label dialog: opened from an issue, estimate, invoice, customer or appointment, or blank from the
+# sidebar (new), sends the label to a printer's
 # queue (create), and follows it until it's printed (show, polled by the dialog). The dialog asks for show's
 # JSON with an Accept header, not a .json URL: Redmine treats .json as the REST API, without the session.
 class LabelJobsController < ApplicationController
@@ -27,7 +28,7 @@ class LabelJobsController < ApplicationController
     @copies = params[:copies].to_i.clamp(1, LabelJob::MAX_COPIES)
     printer = @printers.find { |p| p.id == params[:printer_id].to_i } || @printers.first
     @job = LabelJob.new(label_printer: printer, user: User.current, lines: @lines, copies: @copies,
-                        source_type: @source.type, source_id: @source.id.to_s)
+                        source_type: @source.type, source_id: @source.id&.to_s)
     @job.save if printer
     respond_to { |format| format.js }
   end
