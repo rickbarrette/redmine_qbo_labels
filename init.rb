@@ -23,7 +23,7 @@ Redmine::Plugin.register :redmine_qbo_labels do
 
   # Label printers (print agents) and their recent jobs
   menu :admin_menu, :label_printers, { controller: 'label_printers', action: 'index' },
-       caption: :label_label_printer_plural, html: { class: 'icon icon-document' }
+       caption: :label_label_printer_plural, icon: 'qbo-label-print', plugin: :redmine_qbo_labels, html: { class: 'icon' }
 end
 
 RedmineQboLabels.setup
