@@ -22,6 +22,15 @@ The print dialog follows the label until it's printed, or says why it wasn't (no
 * redmine_qbo 2026.11.0 or later (2026.11.19 or later for **Print label** on invoices)
 * A Brother QL printer on the network (made for the QL-820NWB) and a computer on the same network that runs Docker, for the print agent
 
+## Screenshots
+
+All names and figures are made up.
+
+<table>
+<tr><td width="50%"><img src="Screenshots/dialog_issue.png" alt="Print label on a work order, with a preview of the label"><br><sub>Print label on a work order, with a preview of the label</sub></td><td width="50%"><img src="Screenshots/dialog_customer.png" alt="Print label from the sidebar on a customer's page"><br><sub>Print label from the sidebar on a customer's page</sub></td></tr>
+<tr><td width="50%"><img src="Screenshots/printers.png" alt="Label printers and their print agents, with recent labels"><br><sub>Label printers and their print agents, with recent labels</sub></td><td width="50%"><img src="Screenshots/settings.png" alt="Label and print agent settings"><br><sub>Label and print agent settings</sub></td></tr>
+</table>
+
 ## Installation
 
 ```
